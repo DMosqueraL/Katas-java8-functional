@@ -18,6 +18,16 @@ public class Kata2 {
     public static List<Integer> execute() {
         List<Movie> movies = DataUtil.getMovies();
 
-        return ImmutableList.of(1, 2, 3);
+        List<Integer> rating = (List<Integer>) movies.stream()
+                .map(e -> e.getRating().intValue())
+                .filter(e -> e == 5)
+                .collect(Collectors.toList());
+
+        //rating.forEach(System.out::println);
+
+        //return ImmutableList.of(1, 2, 3);
+
+        return rating;
+
     }
 }
