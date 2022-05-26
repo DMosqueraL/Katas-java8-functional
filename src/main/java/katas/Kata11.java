@@ -1,11 +1,12 @@
 package katas;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import util.DataUtil;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /*
     Goal: Create a datastructure from the given data:
@@ -63,8 +64,47 @@ public class Kata11 {
         List<Map> boxArts = DataUtil.getBoxArts();
         List<Map> bookmarkList = DataUtil.getBookmarkList();
 
-        return ImmutableList.of(ImmutableMap.of("name", "someName", "videos", ImmutableList.of(
-                ImmutableMap.of("id", 5, "title", "The Chamber", "time", 123, "boxart", "someUrl")
-        )));
+        return lists.stream()
+                .map(list -> Map.of("name", getUrl(list, "name"), "videos",
+                        videos.stream().filter(video -> isValidateVideosList(video, "listId", getUrl(list, "id")))
+                                .map(video -> Map.of("id", getUrl(video, "id"), "title", getUrl(video, "title"),
+                                        "time", getTime(getUrl(video, "id"), bookmarkList), "boxart",
+                                        boxArts.stream().filter(box -> isValidateVideosList(video, "id", getUrl(box, "videoId")))
+                                                .min(getMapComparator())
+                                                .map(boxArt -> getUrl(boxArt, "url")).orElse("")))
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+
     }
+
+    private static boolean isValidateVideosList(Map video, String id, Object box) {
+        return validateVideosList(video, id, box);
+    }
+
+    private static Comparator<Map> getMapComparator() {
+        return Comparator.comparingInt(Kata11::getBoxArea);
+    }
+
+    private static int getBoxArea(Map o2) {
+        return (Integer) getUrl(o2, "width") * (Integer) getUrl(o2, "height");
+    }
+
+    private static Object getUrl(Map boxArt, String url) {
+        return boxArt.get(url);
+    }
+
+    private static boolean validateVideosList(Map video, String listId, Object list) {
+        return getUrl(video, listId).equals(list);
+    }
+
+    private static Object getTime(Object videoId, List<Map> bookmarkList) {
+
+        return bookmarkList.stream().filter(bookmark -> isValidateVideosList(bookmark, "videoId", videoId))
+                .map(bookmark -> getUrl(bookmark, "time")).findFirst().orElse(null);
+
+    }
+
+        /*return ImmutableList.of(ImmutableMap.of("name", "someName", "videos", ImmutableList.of(
+                ImmutableMap.of("id", 5, "title", "The Chamber", "time", 123, "boxart", "someUrl")
+        )));*/
 }
