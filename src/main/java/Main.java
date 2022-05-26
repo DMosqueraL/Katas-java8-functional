@@ -1,5 +1,6 @@
 import katas.*;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,13 +14,13 @@ public class Main {
         assertEquals(Kata3.execute().size(), 4);
         System.out.println("Kata 3 solved!");
 
-       /*assertEquals(Kata4.execute().size(), 4);
+        assertEquals(Kata4.execute().size(), 4);
         System.out.println("Kata 4 solved!");
 
         assertEquals(Kata5.execute(), 5.0, 0.0);
         System.out.println("Kata 5 solved!");
 
-        assertEquals(Kata6.execute(), "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg");
+        /*assertEquals(Kata6.execute(), "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg");
         System.out.println("Kata 6 solved!");
 
         assertEquals(Kata7.execute().size(), 4);
